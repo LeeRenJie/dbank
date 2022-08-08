@@ -23,9 +23,18 @@ actor DBank {
 
   // create functions
   // private function. Only accessible in this actor since it is inside the actor's curly braces.
-  // Add public function to be accessible outside the actor's curly braces.
-  public func topUp() {
-    currentValue += 1;
+  // Add public keyword infront of the function to be accessible outside the actor's curly braces.
+  // Add input parameter to the function named amount with data type of Nat.
+  public func topUp(amount: Nat) {
+    currentValue += amount;
+    // print currentValue
+    Debug.print(debug_show(currentValue));
+  };
+
+  // Withdraw amount from the currentValue
+  // Decrease the currentValue by the amount
+  public func withdraw(amount: Nat) {
+    currentValue -= amount;
     // print currentValue
     Debug.print(debug_show(currentValue));
   };
@@ -35,4 +44,11 @@ actor DBank {
   // dfx canister call canisterName FunctionName '("args")'
   // in this case since we have no args in the function, 'dfx canister call dbank_backend topUp'
   // topUp();
+
+  //--------CANDID UI-------------//
+  // Find the Candid UI canister identifier associated with the counter using the 'dfx canister id __Candid_UI' command in the CLI.
+  // Add the ID to the URL `http://127.0.0.1:8000/?canisterId=<CANDID-UI-CANISTER-IDENTIFIER>`
+  // On the website, the canister ID to provide is the program's ID.
+  // We can get it with `dfx canister id dbank_backend`.
+  // We can see the function and textfield to enter the 'amount' input.
 }
