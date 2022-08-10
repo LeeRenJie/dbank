@@ -5,7 +5,7 @@ import Debug "mo:base/Debug";
 actor DBank {
   // Naming convention lowerCamelCase for constants and var
   // UpperCamelCase for type names (including classes or type parameters), actor names, module names.
-  var currentValue = 300;
+  var currentValue: Nat = 300;
   // := replace value in variable (300 to 100)
   currentValue := 100;
 
@@ -44,6 +44,13 @@ actor DBank {
     }
   };
 
+  // Query call add `query` keyword before the func.
+  // Return in the function has to be asynchronously.
+  public query func getBalance(): async Nat {
+    // return currentValue (read only, no data manipulated here)
+    return currentValue;
+  };
+
   // Call the function
   // Call canister's specfic function after 'dfx deploy' with:
   // dfx canister call canisterName FunctionName '("args")'
@@ -56,4 +63,30 @@ actor DBank {
   // On the website, the canister ID to provide is the program's ID.
   // We can get it with `dfx canister id dbank_backend`.
   // We can see the function and textfield to enter the 'amount' input.
-}
+
+  //---------Explanations----------//
+  // 1. Why a simple function takes up to 2-3 seconds to execute?
+  /*
+    In Internet Computer (ICP), the functions topUp and withdraw is known as a update method.
+    that updates the state of the variable (currentValue) in the actor.
+    That means it has to write to the blockchain = more computation needed
+  */
+
+  // 2. Query Calls vs Update Calls
+  /*
+    Query calls are read-only calls that return data/current state of a canister without changing it. (fast)
+    Update calls are write-only calls that modify the state of the actor. (slower)
+
+    ie. topUp and withdraw are update calls which takes 2-3s. getBalance is query call which takes around 0.2s.
+  */
+
+  // 3. Synchronous vs Asynchronous
+  /*
+    Synchronous: A function is blocked until the other function is finished executing.
+    Asynchronous: The functions are not blocked and can execute at the same time.
+
+    Analogy:
+    Synchronous: Two train at one train track. One has to move before the other moves
+    Asynchronous: Two trains at two train tracks. They can move at the same time.
+  */
+};
